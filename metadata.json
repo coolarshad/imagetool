@@ -1,0 +1,6 @@
+{
+  "name": "ImageToolLab - Professional Image Processing Lab",
+  "description": "A powerful, privacy-focused image processing laboratory. Resize, crop, convert, and optimize images directly in your browser with professional-grade tools.",
+  "requestFramePermissions": [],
+  "disableRemix": true
+}

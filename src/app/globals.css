@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-brand-primary: #10b981;
+  --color-brand-secondary: #14b8a6;
+  --color-brand-accent: #84cc16;
+  --color-bg-deep: #f8fafc;
+  --color-bg-card: #ffffff;
+}
+
+@layer base {
+  body {
+    @apply bg-[#f8fafc] text-slate-900 antialiased selection:bg-emerald-500/30;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-emerald-200 rounded-full hover:bg-emerald-300 transition-colors;
+  }
+
+  /* Range Input Styling */
+  input[type="range"]::-webkit-slider-thumb {
+    @apply appearance-none w-5 h-5 rounded-full bg-emerald-500 cursor-pointer shadow-[0_4px_12px_rgba(16,185,129,0.3)] border-2 border-white transition-transform hover:scale-110;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    @apply w-5 h-5 rounded-full bg-emerald-500 cursor-pointer shadow-[0_4px_12px_rgba(16,185,129,0.3)] border-2 border-white transition-transform hover:scale-110;
+  }
+}
+
+.react-crop__crop-mask {
+  @apply !bg-black/40;
+}
+
+.react-crop__drag-handle::after {
+  @apply !bg-white !border-emerald-500 !border-2 !w-3 !h-3 !-ml-1.5 !-mt-1.5 !shadow-xl !rounded-full;
+}
+
+.glass-effect {
+  @apply bg-white/70 backdrop-blur-xl border border-slate-200/60 shadow-xl;
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-br from-slate-900 via-emerald-800 to-emerald-600;
+}
+
+.brand-gradient {
+  @apply bg-gradient-to-br from-emerald-500 via-teal-500 to-lime-500;
+}
