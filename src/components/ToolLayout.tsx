@@ -18,7 +18,7 @@ interface ToolLayoutProps {
     benefits: string[];
     seoTitle?: string;
     seoDescription?: string;
-  };
+  } | any;
 }
 
 export function ToolLayout({ activeTool, content }: ToolLayoutProps) {

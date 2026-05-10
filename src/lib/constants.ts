@@ -1,6 +1,6 @@
 export type Tool = 'resize' | 'crop' | 'mirror' | 'rotate' | 'compress' | 'convert' | 'pixelate' | 'blackwhite' | 'watermark' | 'metadata';
 
-export const TOOL_CONTENT: Record<Tool, { title: string, desc: string, benefits: string[] }> = {
+export const TOOL_CONTENT: Record<Tool, { title: string, desc: string, benefits: string[], seoTitle?: string, seoDescription?: string }> = {
   resize: {
     title: 'Resize Your Images Online',
     desc: 'Easily resize your images to any dimension or percentage. Perfect for social media, websites, and email attachments.',

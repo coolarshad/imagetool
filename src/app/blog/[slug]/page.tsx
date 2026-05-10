@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (firebaseConfig.projectId === 'YOUR_PROJECT_ID') {
     return { title: 'Article' };
   }
-  const article = await getArticleBySlug(slug);
+  const article: any = await getArticleBySlug(slug);
   if (!article) return { title: 'Article Not Found' };
   
   return {
@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     );
   }
 
-  const article = await getArticleBySlug(slug);
+  const article: any = await getArticleBySlug(slug);
   if (!article) {
     notFound();
   }
