@@ -1,15 +1,10 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  // Config options here
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   output: 'export',
-  reactStrictMode: true,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  }
+  // Ensure trailing slashes are handled consistently for static exports
+  trailingSlash: true,
 };
 
 export default nextConfig;
+
+
