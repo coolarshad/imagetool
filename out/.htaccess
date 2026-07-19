@@ -1,0 +1,28 @@
+# Enable Rewrite Engine
+RewriteEngine On
+
+# 1. Redirect index.html to trailing slash URL / or /subpage/
+# e.g., /index.html -> /
+# e.g., /about/index.html -> /about/
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*index\.html\ HTTP/ [NC]
+RewriteRule ^(([^/]+/)*)index\.html$ https://imagetoollab.com/$1 [R=301,L]
+
+# 2. Redirect HTTP or WWW (missing trailing slash) directly to HTTPS + non-WWW + Trailing Slash (1 hop)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !(.*)\.(xml|txt|html|css|js|png|jpg|jpeg|gif|svg|ico|json)$
+RewriteCond %{REQUEST_URI} !(.*)/$
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^(.*)$ https://imagetoollab.com/$1/ [L,R=301]
+
+# 3. Redirect HTTP or WWW (with trailing slash or for files/homepage) to HTTPS + non-WWW
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^(.*)$ https://imagetoollab.com/$1 [L,R=301]
+
+# 4. Add trailing slash to non-WWW, HTTPS requests that are missing it (excluding files/API)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !^/api/
+RewriteCond %{REQUEST_URI} !(.*)\.(xml|txt|html|css|js|png|jpg|jpeg|gif|svg|ico|json)$
+RewriteCond %{REQUEST_URI} !(.*)/$
+RewriteRule ^(.*)$ https://imagetoollab.com/$1/ [L,R=301]

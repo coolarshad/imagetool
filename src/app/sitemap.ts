@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/pixelate-image',
     '/blackwhite-image'
   ].map((route) => ({
-    url: `${baseUrl}${route}`,
+    url: route === '' ? `${baseUrl}/` : `${baseUrl}${route}/`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: route === '' ? 1 : 0.8,
@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const articles = await getArticles();
     blogRoutes = articles.map((article: any) => ({
-      url: `${baseUrl}/blog/${article.slug}`,
+      url: `${baseUrl}/blog/${article.slug}/`,
       lastModified: article.publishedAt ? new Date(article.publishedAt) : new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.7,

@@ -3,7 +3,8 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Terms of Service - ImageToolLab',
-  description: 'Review the Terms of Service for using ImageToolLab.'
+  description: 'Read the terms of service for using ImageToolLab\'s free online image editing tools.',
+  alternates: { canonical: '/terms/' }
 };
 
 export default function TermsPage() {

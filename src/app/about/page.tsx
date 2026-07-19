@@ -3,7 +3,8 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'About Us - ImageToolLab',
-  description: 'Learn more about ImageToolLab\'s mission to provide fast, secure, and completely private browser-based image editing tools.'
+  description: 'Learn more about ImageToolLab\'s mission to provide fast, secure, and completely private browser-based image editing tools.',
+  alternates: { canonical: '/about/' }
 };
 
 export default function AboutPage() {

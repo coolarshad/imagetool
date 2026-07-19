@@ -3,7 +3,8 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy - ImageToolLab',
-  description: 'Read the ImageToolLab Privacy Policy. Discover how we protect your data by processing images entirely inside your browser without external servers.'
+  description: 'Read our privacy policy to understand how ImageToolLab completely protects your data by processing all images locally in your browser.',
+  alternates: { canonical: '/privacy/' }
 };
 
 export default function PrivacyPage() {

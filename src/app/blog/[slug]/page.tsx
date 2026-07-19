@@ -31,7 +31,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   
   return {
     title: article.seoTitle || `${article.title} - ImageToolLab Blog`,
-    description: article.seoDescription || article.excerpt
+    description: article.seoDescription || article.excerpt,
+    alternates: { canonical: `/blog/${slug}/` }
   };
 }
 

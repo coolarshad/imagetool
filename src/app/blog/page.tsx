@@ -6,7 +6,8 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "Blog & Articles - ImageToolLab",
-  description: "Read our latest articles, tutorials, and tips on image editing, web performance, and digital privacy."
+  description: "Read our latest articles, tutorials, and tips on image editing, web performance, and digital privacy.",
+  alternates: { canonical: '/blog/' }
 };
 
 export default async function BlogPage() {

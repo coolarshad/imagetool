@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: content.seoTitle || content.title,
     description: content.seoDescription || content.desc,
-    alternates: { canonical: '/mirror-image' },
+    alternates: { canonical: '/mirror-image/' },
   };
 }
 
