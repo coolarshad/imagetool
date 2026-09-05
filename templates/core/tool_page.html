@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags core_tags %}
+
+{% block content %}
+  {# Hero & Image Editor Workspace pre-configured for this tool #}
+  {% include "core/includes/editor_workspace.html" %}
+
+  {# Informational / SEO Content Blocks #}
+  <div class="mt-24 space-y-24">
+    
+    {# Tool Benefits & Details #}
+    <section class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+      <div class="md:col-span-7 glass-effect p-8 md:p-14 rounded-[2.5rem] flex flex-col justify-center relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-72 h-72 brand-gradient opacity-[0.06] blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
+        <h2 class="text-3xl md:text-5xl font-black mb-6 gradient-text tracking-tight">
+          Why use ImageToolLab {{ page.title }}?
+        </h2>
+        <p class="text-slate-600 leading-relaxed mb-8 text-base md:text-lg font-medium">
+          Experience high-performance, studio-grade image manipulation directly on your device with 100% privacy and zero server latency.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          {% if page.benefits %}
+            {% for block in page.benefits %}
+              <div class="flex items-center gap-3.5 text-sm font-bold text-slate-800 bg-white border border-slate-200/80 p-4 rounded-2xl shadow-xs">
+                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+                <span>{{ block.value.title }}</span>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="flex items-center gap-3.5 text-sm font-bold text-slate-800 bg-white border border-slate-200/80 p-4 rounded-2xl shadow-xs">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+              <span>Lossless Canvas Resampling</span>
+            </div>
+            <div class="flex items-center gap-3.5 text-sm font-bold text-slate-800 bg-white border border-slate-200/80 p-4 rounded-2xl shadow-xs">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+              <span>No File Size Restrictions</span>
+            </div>
+            <div class="flex items-center gap-3.5 text-sm font-bold text-slate-800 bg-white border border-slate-200/80 p-4 rounded-2xl shadow-xs">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+              <span>Browser-Side Hardware Acceleration</span>
+            </div>
+            <div class="flex items-center gap-3.5 text-sm font-bold text-slate-800 bg-white border border-slate-200/80 p-4 rounded-2xl shadow-xs">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+              <span>Instant Local Export</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {# Visual Feature Card #}
+      <div class="md:col-span-5 rounded-[2.5rem] border border-slate-200/80 overflow-hidden relative group bg-white shadow-xl flex items-center justify-center p-8">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 opacity-60"></div>
+        <div class="w-full aspect-square rounded-3xl border border-slate-100 flex flex-col items-center justify-center relative bg-slate-50/60 backdrop-blur-sm p-8 text-center">
+          <div class="w-24 h-24 brand-gradient rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-500/25 mb-6 group-hover:scale-105 transition-transform text-white">
+            {{ page.tool_type|tool_icon }}
+          </div>
+          <h3 class="text-2xl font-black text-slate-900 mb-2 tracking-tight">{{ page.title }}</h3>
+          <p class="text-slate-500 text-sm font-medium">Fine-tuned precision controls designed for both creative professionals and everyday users.</p>
+        </div>
+      </div>
+    </section>
+
+    {# How-to Steps (Structured for SEO) #}
+    {% if page.how_to_steps %}
+    <section class="max-w-6xl mx-auto">
+      <div class="text-center mb-14">
+        <h2 class="text-3xl md:text-5xl font-black mb-4 gradient-text tracking-tight">
+          How to use {{ page.title }}
+        </h2>
+        <p class="text-slate-500 text-base font-medium">Follow these simple steps to edit your image in seconds.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {% for block in page.how_to_steps %}
+          <div class="glass-effect p-8 md:p-10 rounded-[2.5rem] relative group hover:bg-white transition-all hover:-translate-y-1.5 shadow-md">
+            <span class="inline-flex items-center justify-center w-12 h-12 rounded-2xl font-black text-white shadow-lg mb-6 text-base brand-gradient">
+              {{ block.value.step_number }}
+            </span>
+            <h3 class="text-xl md:text-2xl font-black mb-3 text-slate-900 tracking-tight">{{ block.value.title }}</h3>
+            <p class="text-slate-500 leading-relaxed font-medium text-sm">{{ block.value.description }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {# In-Depth Editorial / Guide Content #}
+    {% if page.editorial_content %}
+    <section class="max-w-4xl mx-auto glass-effect p-8 md:p-14 rounded-[2.5rem] prose">
+      {% for block in page.editorial_content %}
+        {% if block.block_type == 'rich_text' %}
+          {{ block.value|richtext }}
+        {% elif block.block_type == 'callout' %}
+          <div class="p-6 my-6 rounded-2xl border-l-4 {% if block.value.type == 'info' %}bg-sky-50 border-sky-500 text-sky-900{% elif block.value.type == 'warning' %}bg-amber-50 border-amber-500 text-amber-900{% else %}bg-emerald-50 border-emerald-500 text-emerald-900{% endif %}">
+            {% if block.value.title %}<h4 class="font-bold text-lg mb-2">{{ block.value.title }}</h4>{% endif %}
+            {{ block.value.text|richtext }}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {# Tool FAQs #}
+    {% if page.faqs %}
+    <section class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-5xl font-black mb-4 gradient-text tracking-tight">
+          {{ page.title }} Questions & Answers
+        </h2>
+        <p class="text-slate-500 text-base font-medium">Common questions about this tool.</p>
+      </div>
+
+      <div class="space-y-4">
+        {% for block in page.faqs %}
+          <div class="glass-effect rounded-2xl overflow-hidden border border-slate-200/80 shadow-xs">
+            <button 
+              type="button"
+              class="faq-accordion-btn w-full p-6 text-left flex items-center justify-between gap-4 font-black text-slate-900 text-base md:text-lg focus:outline-none"
+              data-target="faq-tool-{{ forloop.counter }}"
+            >
+              <span>{{ block.value.question }}</span>
+              <svg class="faq-chevron w-5 h-5 text-slate-400 transition-transform duration-300 transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div id="faq-tool-{{ forloop.counter }}" class="hidden px-6 pb-6 text-slate-600 text-sm md:text-base leading-relaxed font-medium prose">
+              {{ block.value.answer|richtext }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {# Related Tools #}
+    <section class="max-w-6xl mx-auto pt-10">
+      <div class="text-center mb-10">
+        <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Explore More Tools</h3>
+        <h2 class="text-2xl md:text-4xl font-black gradient-text tracking-tight">Other Image Tools in ImageToolLab</h2>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        {% get_nav_tools as other_tools %}
+        {% for other in other_tools %}
+          {% if other.id != page.id %}
+            <a 
+              href="{{ other.url }}" 
+              class="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500 hover:shadow-lg transition-all text-center flex flex-col items-center gap-3 group"
+            >
+              <div class="w-11 h-11 rounded-xl bg-slate-100 group-hover:bg-slate-900 text-slate-700 group-hover:text-white flex items-center justify-center transition-colors">
+                {{ other.tool_type|tool_icon }}
+              </div>
+              <span class="text-xs font-black text-slate-900 group-hover:text-emerald-600 transition-colors">{{ other.title }}</span>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/editor.js' %}"></script>
+{% endblock %}

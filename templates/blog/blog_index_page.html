@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-8 md:py-16">
+  
+  {# Header #}
+  <div class="text-center mb-16">
+    <div class="w-16 h-16 md:w-20 md:h-20 bg-emerald-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 text-emerald-600 shadow-md shadow-emerald-500/5">
+      <svg class="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    </div>
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight mb-4 gradient-text">
+      {{ page.headline|default:page.title }}
+    </h1>
+    <p class="text-base md:text-xl text-slate-600 font-medium max-w-2xl mx-auto">
+      {{ page.subheadline }}
+    </p>
+  </div>
+
+  {# Article Cards #}
+  {% if posts %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for post in posts %}
+        <article class="group bg-white rounded-3xl shadow-sm hover:shadow-xl hover:shadow-emerald-500/5 transition-all border border-slate-200/80 overflow-hidden flex flex-col">
+          
+          {# Image #}
+          {% if post.featured_image %}
+            {% image post.featured_image fill-600x340 as post_img %}
+            <div class="h-48 overflow-hidden bg-slate-100 relative">
+              <img src="{{ post_img.url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+            </div>
+          {% elif post.featured_image_url %}
+            <div class="h-48 overflow-hidden bg-slate-100 relative">
+              <img src="{{ post.featured_image_url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+            </div>
+          {% endif %}
+
+          <div class="p-8 flex flex-col flex-1">
+            <div class="flex items-center gap-3 text-slate-400 text-xs font-bold mb-3 uppercase tracking-wider">
+              <span>{{ post.published_date|date:"F j, Y" }}</span>
+              <span>•</span>
+              <span>{{ post.get_read_time }} min read</span>
+            </div>
+
+            <h2 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors leading-tight">
+              <a href="{{ post.url }}">{{ post.title }}</a>
+            </h2>
+
+            <p class="text-slate-500 text-sm leading-relaxed mb-6 flex-1 line-clamp-3 font-medium">
+              {{ post.excerpt }}
+            </p>
+
+            <a href="{{ post.url }}" class="inline-flex items-center gap-2 text-emerald-600 font-bold text-sm group/link mt-auto">
+              Read Guide
+              <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+
+        </article>
+      {% endfor %}
+    </div>
+
+    {# Pagination #}
+    {% if posts.paginator.num_pages > 1 %}
+      <div class="mt-16 flex items-center justify-center gap-2">
+        {% if posts.has_previous %}
+          <a href="?page={{ posts.previous_page_number }}" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-sm font-bold hover:bg-slate-50">Previous</a>
+        {% endif %}
+        <span class="px-4 py-2 text-sm font-bold text-slate-500">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
+        {% if posts.has_next %}
+          <a href="?page={{ posts.next_page_number }}" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-sm font-bold hover:bg-slate-50">Next</a>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  {% else %}
+    <div class="text-center py-20 bg-white rounded-3xl shadow-xs border border-slate-200 max-w-xl mx-auto">
+      <p class="text-slate-500 text-base font-medium">No articles published yet. Check back soon!</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

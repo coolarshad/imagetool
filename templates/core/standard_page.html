@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags core_tags %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8 md:py-16">
+  
+  {# Header #}
+  <div class="flex items-center gap-5 mb-10">
+    <div class="w-14 h-14 md:w-16 md:h-16 brand-gradient rounded-3xl flex items-center justify-center shadow-xl shadow-emerald-500/20 text-white flex-shrink-0">
+      {% if page.icon_type == 'users' %}
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      {% elif page.icon_type == 'shield' %}
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      {% elif page.icon_type == 'file-text' %}
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      {% elif page.icon_type == 'mail' %}
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      {% else %}
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      {% endif %}
+    </div>
+    <div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-slate-900">
+        {{ page.title }}
+      </h1>
+      {% if page.subtitle %}
+        <p class="text-slate-500 font-medium text-base mt-1">{{ page.subtitle }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Mission highlight boxes if enabled #}
+  {% if page.show_mission_cards %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
+      <div class="p-8 rounded-[2rem] bg-white border border-slate-200 shadow-md">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-4 shadow-xs">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">Blazing Fast</h3>
+        <p class="text-slate-600 text-sm leading-relaxed font-medium">By leveraging modern browser Web APIs and hardware acceleration, we process your images instantly right on your device.</p>
+      </div>
+
+      <div class="p-8 rounded-[2rem] bg-white border border-slate-200 shadow-md">
+        <div class="w-12 h-12 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600 mb-4 shadow-xs">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">Privacy First</h3>
+        <p class="text-slate-600 text-sm leading-relaxed font-medium">Your images never leave your computer. We don't have servers that store your images, because we don't need them.</p>
+      </div>
+    </div>
+  {% endif %}
+
+  {# Contact Cards if enabled #}
+  {% if page.show_contact_cards %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
+      <a href="mailto:hello@imagetoollab.com" class="p-8 rounded-[2rem] bg-white border border-slate-200 shadow-md hover:border-emerald-500 hover:shadow-xl transition-all group">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110 transition-transform">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-1">Email Us</h3>
+        <p class="text-slate-500 text-sm font-medium mb-4">General inquiries, bug reports & feedback</p>
+        <span class="text-emerald-600 font-black text-base underline decoration-emerald-300 underline-offset-4">hello@imagetoollab.com</span>
+      </a>
+
+      <div class="p-8 rounded-[2rem] bg-white border border-slate-200 shadow-md">
+        <div class="w-12 h-12 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600 mb-4">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-1">Community</h3>
+        <p class="text-slate-500 text-sm font-medium mb-4">Follow us for updates and open-source contributions</p>
+        <div class="flex items-center gap-4 text-slate-800 font-black text-sm">
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-600 transition-colors">Twitter</a>
+          <span>•</span>
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-600 transition-colors">GitHub</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {# Content Body #}
+  <div class="prose max-w-none text-slate-600 leading-relaxed space-y-6 font-medium text-base md:text-lg">
+    {% for block in page.body %}
+      {% if block.block_type == 'rich_text' %}
+        {{ block.value|richtext }}
+      {% elif block.block_type == 'callout' %}
+        <div class="p-6 my-6 rounded-2xl border-l-4 {% if block.value.type == 'info' %}bg-sky-50 border-sky-500 text-sky-900{% elif block.value.type == 'warning' %}bg-amber-50 border-amber-500 text-amber-900{% else %}bg-emerald-50 border-emerald-500 text-emerald-900{% endif %}">
+          {% if block.value.title %}<h4 class="font-bold text-lg mb-2">{{ block.value.title }}</h4>{% endif %}
+          {{ block.value.text|richtext }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

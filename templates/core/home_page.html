@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags core_tags %}
+
+{% block content %}
+  {# Hero & Image Editor Workspace #}
+  {% include "core/includes/editor_workspace.html" %}
+
+  {# Informational / Why Choose Section #}
+  <div class="mt-24 space-y-24">
+    
+    {# Why Choose Us #}
+    <section class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+      <div class="md:col-span-7 glass-effect p-8 md:p-14 rounded-[2.5rem] flex flex-col justify-center relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-72 h-72 brand-gradient opacity-[0.06] blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
+        <h2 class="text-3xl md:text-5xl font-black mb-6 gradient-text tracking-tight">
+          {{ page.why_choose_title|default:"Why choose ImageToolLab?" }}
+        </h2>
+        <p class="text-slate-600 leading-relaxed mb-8 text-base md:text-lg font-medium">
+          {{ page.why_choose_text }}
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          {% if page.benefits %}
+            {% for block in page.benefits %}
+              <div class="flex items-center gap-3.5 text-sm font-bold text-slate-800 bg-white border border-slate-200/80 p-4 rounded-2xl shadow-xs">
+                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+                <span>{{ block.value.title }}</span>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="flex items-center gap-3.5 text-sm font-bold text-slate-800 bg-white border border-slate-200/80 p-4 rounded-2xl shadow-xs">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+              <span>100% Client-Side Privacy</span>
+            </div>
+            <div class="flex items-center gap-3.5 text-sm font-bold text-slate-800 bg-white border border-slate-200/80 p-4 rounded-2xl shadow-xs">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+              <span>Zero Upload Latency</span>
+            </div>
+            <div class="flex items-center gap-3.5 text-sm font-bold text-slate-800 bg-white border border-slate-200/80 p-4 rounded-2xl shadow-xs">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+              <span>High-Precision Canvas Engine</span>
+            </div>
+            <div class="flex items-center gap-3.5 text-sm font-bold text-slate-800 bg-white border border-slate-200/80 p-4 rounded-2xl shadow-xs">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+              <span>Free & Unlimited Use</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {# Feature Accent Card #}
+      <div class="md:col-span-5 rounded-[2.5rem] border border-slate-200/80 overflow-hidden relative group bg-white shadow-xl flex items-center justify-center p-8">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 opacity-60"></div>
+        <div class="w-full aspect-square rounded-3xl border border-slate-100 flex flex-col items-center justify-center relative bg-slate-50/60 backdrop-blur-sm p-8 text-center">
+          <div class="w-24 h-24 brand-gradient rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-500/25 mb-6 group-hover:scale-105 transition-transform">
+            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-black text-slate-900 mb-2 tracking-tight">Instant Browser Speed</h3>
+          <p class="text-slate-500 text-sm font-medium">All heavy operations execute right on your GPU and CPU via JavaScript Web APIs.</p>
+        </div>
+      </div>
+    </section>
+
+    {# 3-Step Creative Process #}
+    <section class="max-w-6xl mx-auto text-center">
+      <h2 class="text-3xl md:text-5xl font-black mb-14 gradient-text tracking-tight">
+        The Creative Process
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+        {% if page.steps %}
+          {% for block in page.steps %}
+            <div class="glass-effect p-8 md:p-10 rounded-[2.5rem] relative group hover:bg-white transition-all hover:-translate-y-1.5 shadow-md">
+              <span class="inline-flex items-center justify-center w-12 h-12 rounded-2xl font-black text-white shadow-lg mb-6 text-base brand-gradient">
+                {{ block.value.step_number }}
+              </span>
+              <h3 class="text-xl md:text-2xl font-black mb-3 text-slate-900 tracking-tight">{{ block.value.title }}</h3>
+              <p class="text-slate-500 leading-relaxed font-medium text-sm">{{ block.value.description }}</p>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="glass-effect p-8 md:p-10 rounded-[2.5rem] relative group hover:bg-white transition-all hover:-translate-y-1.5 shadow-md">
+            <span class="inline-flex items-center justify-center w-12 h-12 rounded-2xl font-black text-white shadow-lg mb-6 text-base brand-gradient">01</span>
+            <h3 class="text-xl md:text-2xl font-black mb-3 text-slate-900 tracking-tight">Import</h3>
+            <p class="text-slate-500 leading-relaxed font-medium text-sm">Drag your high-resolution assets into our secure workspace or paste from clipboard.</p>
+          </div>
+          <div class="glass-effect p-8 md:p-10 rounded-[2.5rem] relative group hover:bg-white transition-all hover:-translate-y-1.5 shadow-md">
+            <span class="inline-flex items-center justify-center w-12 h-12 rounded-2xl font-black text-white shadow-lg mb-6 text-base brand-gradient">02</span>
+            <h3 class="text-xl md:text-2xl font-black mb-3 text-slate-900 tracking-tight">Refine</h3>
+            <p class="text-slate-500 leading-relaxed font-medium text-sm">Apply professional-grade transformations, crop, compression, watermark, and filters with real-time feedback.</p>
+          </div>
+          <div class="glass-effect p-8 md:p-10 rounded-[2.5rem] relative group hover:bg-white transition-all hover:-translate-y-1.5 shadow-md">
+            <span class="inline-flex items-center justify-center w-12 h-12 rounded-2xl font-black text-white shadow-lg mb-6 text-base brand-gradient">03</span>
+            <h3 class="text-xl md:text-2xl font-black mb-3 text-slate-900 tracking-tight">Export</h3>
+            <p class="text-slate-500 leading-relaxed font-medium text-sm">Download your optimized masterpiece in PNG, JPG, WEBP, or any chosen format instantly.</p>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    {# Frequently Asked Questions #}
+    {% if page.faqs %}
+    <section class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-5xl font-black mb-4 gradient-text tracking-tight">
+          Frequently Asked Questions
+        </h2>
+        <p class="text-slate-500 text-base font-medium">Everything you need to know about ImageToolLab.</p>
+      </div>
+
+      <div class="space-y-4">
+        {% for block in page.faqs %}
+          <div class="glass-effect rounded-2xl overflow-hidden border border-slate-200/80 shadow-xs">
+            <button 
+              type="button"
+              class="faq-accordion-btn w-full p-6 text-left flex items-center justify-between gap-4 font-black text-slate-900 text-base md:text-lg focus:outline-none"
+              data-target="faq-home-{{ forloop.counter }}"
+            >
+              <span>{{ block.value.question }}</span>
+              <svg class="faq-chevron w-5 h-5 text-slate-400 transition-transform duration-300 transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div id="faq-home-{{ forloop.counter }}" class="hidden px-6 pb-6 text-slate-600 text-sm md:text-base leading-relaxed font-medium prose">
+              {{ block.value.answer|richtext }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/editor.js' %}"></script>
+{% endblock %}
