@@ -65,3 +65,41 @@ python manage.py runserver 0.0.0.0:8000
 ```bash
 python manage.py test
 ```
+
+---
+
+## 🌐 Deploying on cPanel (Setup Python App)
+
+1. **Clone / pull** the repo into `~/repositories/imagetool` (cPanel → Git Version Control).
+2. **cPanel → Setup Python App → Create Application**
+   - Python version: **3.10 or newer** (Django 5.2 requires it)
+   - Application root: `repositories/imagetool`
+   - Application URL: `imagetoollab.com` (leave the path empty — not `/imagetool`)
+   - Application startup file: `passenger_wsgi.py`
+   - Application entry point: `application`
+   - Environment variables: `DJANGO_SECRET_KEY` (see `.env.example`)
+3. Copy the "Enter to the virtual environment" command shown at the top of the app page, run it in **Terminal**, then:
+   ```bash
+   cd ~/repositories/imagetool
+   pip install -r requirements.txt
+   python manage.py migrate --settings=imagetool_cms.settings.production
+   python manage.py collectstatic --noinput --settings=imagetool_cms.settings.production
+   ```
+4. Click **Restart** on the app page (or `touch tmp/restart.txt`).
+
+### Updating later
+```bash
+cd ~/repositories/imagetool && git pull
+python manage.py migrate --settings=imagetool_cms.settings.production
+python manage.py collectstatic --noinput --settings=imagetool_cms.settings.production
+mkdir -p tmp && touch tmp/restart.txt
+```
+
+### Still getting 404?
+- **Plain Apache/LiteSpeed 404 page** (not the site's own design): the domain isn't routed to Python.
+  Open `~/public_html/.htaccess` — it must contain the `# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN` block
+  that cPanel writes. If you copied the old Next.js `out/.htaccess` or files from `out/` into `public_html`, remove them
+  (move `index.html`, `_next/`, etc. out of `public_html`) and press **Restart** in Setup Python App so cPanel rewrites the block.
+  Also check the domain's document root is the `public_html` cPanel associated with the app.
+- **The site's own 404 page**: Django is running. Check that `db.sqlite3` exists in the app root and run `migrate`.
+- **500 / "Something went wrong"**: read `~/repositories/imagetool/stderr.log`.

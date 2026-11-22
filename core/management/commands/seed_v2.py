@@ -74,8 +74,8 @@ class Command(BaseCommand):
         site = Site.objects.filter(is_default_site=True).first()
         if not site:
             site = Site.objects.create(
-                hostname="localhost",
-                port=8000,
+                hostname="imagetoollab.com",
+                port=443,
                 site_name="ImageToolLab",
                 root_page=home,
                 is_default_site=True,
