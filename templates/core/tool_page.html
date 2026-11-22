@@ -71,7 +71,7 @@
         <p class="text-slate-500 text-base font-medium">Follow these simple steps to edit your image in seconds.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 gap-6 {% if page.how_to_steps|length == 4 %}md:grid-cols-2 xl:grid-cols-4{% else %}md:grid-cols-3{% endif %}">
         {% for block in page.how_to_steps %}
           <div class="glass-effect p-8 md:p-10 rounded-[2.5rem] relative group hover:bg-white transition-all hover:-translate-y-1.5 shadow-md">
             <span class="inline-flex items-center justify-center w-12 h-12 rounded-2xl font-black text-white shadow-lg mb-6 text-base brand-gradient">

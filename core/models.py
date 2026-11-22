@@ -11,6 +11,59 @@ from wagtail.images.blocks import ImageChooserBlock
 from .blocks import BenefitBlock, StepBlock, FAQBlock, FeatureCardBlock, CalloutBlock
 
 
+def _social_profiles(request):
+    """Return the configured social/profile URLs (one per line in SEOSettings)."""
+    try:
+        seo = SEOSettings.for_request(request)
+    except Exception:
+        return []
+    raw = getattr(seo, "social_profiles", "") or ""
+    return [line.strip() for line in raw.splitlines() if line.strip().startswith("http")]
+
+
+def organization_node(request):
+    """Schema.org Organization entity for the ImageToolLab brand."""
+    base_url = request.build_absolute_uri('/')[:-1]
+    node = {
+        "@type": "Organization",
+        "@id": f"{base_url}/#organization",
+        "name": "ImageToolLab",
+        "url": base_url + "/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": f"{base_url}/static/images/logo.png",
+            "width": 512,
+            "height": 512,
+        },
+        "description": "Free, privacy-first image editing tools that run entirely in the web browser.",
+    }
+    same_as = _social_profiles(request)
+    if same_as:
+        node["sameAs"] = same_as
+    return node
+
+
+def web_application_node(request, *, node_id, name, url, description, feature_list=None):
+    """Schema.org WebApplication entity for a free in-browser tool."""
+    base_url = request.build_absolute_uri('/')[:-1]
+    node = {
+        "@type": "WebApplication",
+        "@id": node_id,
+        "name": name,
+        "url": url,
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Any (runs in a modern web browser)",
+        "browserRequirements": "Requires JavaScript and HTML5 Canvas support",
+        "isAccessibleForFree": True,
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+        "description": description,
+        "publisher": {"@id": f"{base_url}/#organization"},
+    }
+    if feature_list:
+        node["featureList"] = feature_list
+    return node
+
+
 class HomePage(Page):
     max_count = 1
     subpage_types = ['core.ToolPage', 'core.StandardPage', 'blog.BlogIndexPage']
@@ -84,28 +137,34 @@ class HomePage(Page):
         schema = {
             "@context": "https://schema.org",
             "@graph": [
+                organization_node(request),
                 {
                     "@type": "WebSite",
                     "@id": f"{base_url}/#website",
-                    "url": base_url,
+                    "url": base_url + "/",
                     "name": "ImageToolLab",
                     "description": self.search_description or self.subheadline,
-                    "inLanguage": "en-US"
+                    "inLanguage": "en-US",
+                    "publisher": {"@id": f"{base_url}/#organization"}
                 },
-                {
-                    "@type": "SoftwareApplication",
-                    "@id": f"{base_url}/#application",
-                    "name": "ImageToolLab Online Image Editor",
-                    "applicationCategory": "DesignApplication",
-                    "operatingSystem": "All modern web browsers",
-                    "url": base_url,
-                    "offers": {
-                        "@type": "Offer",
-                        "price": "0",
-                        "priceCurrency": "USD"
-                    },
-                    "description": self.search_description or self.subheadline
-                }
+                web_application_node(
+                    request,
+                    node_id=f"{base_url}/#application",
+                    name="ImageToolLab Online Image Editor",
+                    url=base_url + "/",
+                    description=self.search_description or self.subheadline,
+                    feature_list=[
+                        "Resize images by pixels or percentage",
+                        "Crop images",
+                        "Compress JPG and WebP images",
+                        "Convert between PNG, JPG and WebP",
+                        "Rotate and flip images",
+                        "Add text watermarks",
+                        "Remove EXIF and GPS metadata",
+                        "Pixelate and censor parts of a photo",
+                        "Black and white filter",
+                    ],
+                ),
             ]
         }
 
@@ -218,20 +277,15 @@ class ToolPage(Page):
         schema = {
             "@context": "https://schema.org",
             "@graph": [
-                {
-                    "@type": "SoftwareApplication",
-                    "@id": f"{page_url}#software",
-                    "name": self.headline or self.title,
-                    "applicationCategory": "DesignApplication",
-                    "operatingSystem": "All modern browsers",
-                    "url": page_url,
-                    "offers": {
-                        "@type": "Offer",
-                        "price": "0",
-                        "priceCurrency": "USD"
-                    },
-                    "description": self.search_description or self.subheadline
-                },
+                organization_node(request),
+                web_application_node(
+                    request,
+                    node_id=f"{page_url}#software",
+                    name=self.headline or self.title,
+                    url=page_url,
+                    description=self.search_description or self.subheadline,
+                    feature_list=[str(b.value['title']) for b in (self.benefits or []) if b.block_type == 'benefit'] or None,
+                ),
                 {
                     "@type": "BreadcrumbList",
                     "@id": f"{page_url}#breadcrumbs",
@@ -401,6 +455,11 @@ class SEOSettings(BaseSiteSetting):
         related_name='+',
         help_text="Default image used when sharing on Facebook, Twitter, LinkedIn"
     )
+    social_profiles = models.TextField(
+        blank=True,
+        help_text="Official profile URLs, one per line (X/Twitter, GitHub, LinkedIn, Product Hunt...). "
+                  "Published as Organization sameAs in structured data."
+    )
 
     panels = [
         MultiFieldPanel([
@@ -413,5 +472,6 @@ class SEOSettings(BaseSiteSetting):
             FieldPanel('google_analytics_id'),
             FieldPanel('twitter_handle'),
             FieldPanel('default_og_image'),
+            FieldPanel('social_profiles'),
         ], heading="Verification & Social"),
     ]

@@ -95,6 +95,16 @@ python manage.py collectstatic --noinput --settings=imagetool_cms.settings.produ
 mkdir -p tmp && touch tmp/restart.txt
 ```
 
+### Tool page SEO content
+The tool-specific how-to steps, FAQs, guides and meta descriptions live in `core/seo_content.py`.
+Push them into the live pages (publishes a new revision of each ToolPage; safe to re-run):
+```bash
+python manage.py update_tool_content --dry-run --settings=imagetool_cms.settings.production
+python manage.py update_tool_content --settings=imagetool_cms.settings.production
+```
+Keep the copy in sync with what `static/js/editor.js` really does. Add official social profile URLs in
+Wagtail admin → Settings → SEO Settings → "Social profiles" to publish them as Organization `sameAs`.
+
 ### Still getting 404?
 - **Plain Apache/LiteSpeed 404 page** (not the site's own design): the domain isn't routed to Python.
   Open `~/public_html/.htaccess` — it must contain the `# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN` block

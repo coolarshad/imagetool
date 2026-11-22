@@ -6,7 +6,7 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.contrib.sitemaps.views import sitemap
 
-from core.views import RobotsTxtView
+from core.views import LlmsTxtView, RobotsTxtView
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
@@ -14,6 +14,7 @@ urlpatterns = [
     path('documents/', include(wagtaildocs_urls)),
     path('sitemap.xml', sitemap),
     path('robots.txt', RobotsTxtView.as_view(), name='robots_txt'),
+    path('llms.txt', LlmsTxtView.as_view(), name='llms_txt'),
 ]
 
 if settings.DEBUG:

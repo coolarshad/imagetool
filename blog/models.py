@@ -11,6 +11,7 @@ from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 
 from core.blocks import FAQBlock, CalloutBlock, FeatureCardBlock
+from core.models import organization_node
 
 
 class BlogIndexPage(Page):
@@ -162,6 +163,13 @@ class BlogPage(Page):
         read_time = max(1, math.ceil(total_words / 200))
         return read_time
 
+    def get_author_schema(self, base_url):
+        """A named person is a Person; a team byline is the Organization itself."""
+        name = (self.author or "").strip()
+        if not name or "team" in name.lower() or name.lower().startswith("imagetoollab"):
+            return {"@id": f"{base_url}/#organization"}
+        return {"@type": "Person", "name": name}
+
     def get_structured_data(self, request):
         page_url = request.build_absolute_uri(self.url)
         base_url = request.build_absolute_uri('/')[:-1]
@@ -186,22 +194,12 @@ class BlogPage(Page):
                     "description": self.search_description or self.excerpt,
                     "datePublished": self.published_date.isoformat() if self.published_date else self.first_published_at.isoformat(),
                     "dateModified": self.latest_revision_created_at.isoformat() if self.latest_revision_created_at else timezone.now().isoformat(),
-                    "author": {
-                        "@type": "Person",
-                        "name": self.author
-                    },
-                    "publisher": {
-                        "@type": "Organization",
-                        "name": "ImageToolLab",
-                        "url": base_url,
-                        "logo": {
-                            "@type": "ImageObject",
-                            "url": f"{base_url}/static/images/logo.png"
-                        }
-                    },
+                    "author": self.get_author_schema(base_url),
+                    "publisher": {"@id": f"{base_url}/#organization"},
                     "mainEntityOfPage": page_url,
                     "inLanguage": "en-US"
                 },
+                organization_node(request),
                 {
                     "@type": "BreadcrumbList",
                     "@id": f"{page_url}#breadcrumbs",

@@ -42,6 +42,10 @@
     watermark: { text: 'ImageToolLab', opacity: 0.6, size: 40, position: 'bottom-right', color: '#ffffff' }
   };
 
+  // Canvas toBlob needs a real MIME type: "image/jpg" is not one, and browsers
+  // silently fall back to PNG for unknown types.
+  const mimeFor = (fmt) => (fmt === 'jpg' || fmt === 'jpeg') ? 'image/jpeg' : `image/${fmt}`;
+
   // -------------------------------------------------------------
   // History & Memory Management
   // -------------------------------------------------------------
@@ -307,7 +311,7 @@
 
       canvas.toBlob(blob => {
         if (blob) pushHistory(URL.createObjectURL(blob));
-      }, `image/${state.format}`);
+      }, mimeFor(state.format));
     });
   }
 
@@ -432,7 +436,7 @@
 
       canvas.toBlob(blob => {
         if (blob) pushHistory(URL.createObjectURL(blob));
-      }, `image/${state.format}`);
+      }, mimeFor(state.format));
     });
   }
 
@@ -458,7 +462,7 @@
 
     canvas.toBlob(blob => {
       if (blob) pushHistory(URL.createObjectURL(blob));
-    }, `image/${state.format}`);
+    }, mimeFor(state.format));
   }
 
   if (btnFlipH) btnFlipH.addEventListener('click', () => applyMirror(true, false));
@@ -499,7 +503,7 @@
 
     canvas.toBlob(blob => {
       if (blob) pushHistory(URL.createObjectURL(blob));
-    }, `image/${state.format}`);
+    }, mimeFor(state.format));
   }
 
   if (btnRotate90) btnRotate90.addEventListener('click', () => applyRotation(90));
@@ -535,7 +539,7 @@
       ctx.drawImage(img, 0, 0);
 
       // WebP and JPEG support quality parameter natively
-      const mime = (state.format === 'png' || state.format === 'bmp') ? 'image/webp' : `image/${state.format}`;
+      const mime = (state.format === 'png' || state.format === 'bmp') ? 'image/webp' : mimeFor(state.format);
       canvas.toBlob(blob => {
         if (blob) {
           pushHistory(URL.createObjectURL(blob));
@@ -572,7 +576,7 @@
 
       canvas.toBlob(blob => {
         if (blob) pushHistory(URL.createObjectURL(blob));
-      }, `image/${state.format}`);
+      }, mimeFor(state.format));
     });
   }
 
@@ -643,7 +647,7 @@
 
       canvas.toBlob(blob => {
         if (blob) pushHistory(URL.createObjectURL(blob));
-      }, `image/${state.format}`);
+      }, mimeFor(state.format));
     });
   }
 
@@ -689,7 +693,7 @@
             `;
           }
         }
-      }, `image/${state.format}`);
+      }, mimeFor(state.format));
     });
   }
 
@@ -736,7 +740,7 @@
 
       canvas.toBlob(blob => {
         if (blob) pushHistory(URL.createObjectURL(blob));
-      }, `image/${state.format}`);
+      }, mimeFor(state.format));
     });
   }
 
@@ -797,7 +801,7 @@
 
       canvas.toBlob(blob => {
         if (blob) pushHistory(URL.createObjectURL(blob));
-      }, `image/${state.format}`);
+      }, mimeFor(state.format));
     });
   }
 
