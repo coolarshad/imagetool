@@ -2,16 +2,22 @@ from django.http import HttpResponse
 from django.views import View
 
 class RobotsTxtView(View):
+    AI_CRAWLERS = [
+        "GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot",
+        "PerplexityBot", "Google-Extended", "Applebot-Extended", "CCBot",
+    ]
+
     def get(self, request, *args, **kwargs):
         base_url = request.build_absolute_uri('/')[:-1]
-        lines = [
-            "User-agent: *",
-            "Allow: /",
-            "Disallow: /admin/",
-            "Disallow: /django-admin/",
-            "Disallow: /documents/",
-            "",
+        disallow = ["Disallow: /admin/", "Disallow: /django-admin/", "Disallow: /documents/"]
+        lines = ["User-agent: *", "Allow: /", *disallow, ""]
+        # Named groups make the welcome explicit for search and AI answer-engine crawlers.
+        # A crawler that matches a named group ignores "*", so each repeats the rules.
+        for bot in self.AI_CRAWLERS:
+            lines += [f"User-agent: {bot}", "Allow: /", *disallow, ""]
+        lines += [
             f"Sitemap: {base_url}/sitemap.xml",
+            f"# AI summary: {base_url}/llms.txt",
         ]
         return HttpResponse("\n".join(lines), content_type="text/plain")
 

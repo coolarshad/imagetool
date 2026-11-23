@@ -8,7 +8,7 @@ from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 
-from .blocks import BenefitBlock, StepBlock, FAQBlock, FeatureCardBlock, CalloutBlock
+from .blocks import BenefitBlock, StepBlock, FAQBlock, FeatureCardBlock, CalloutBlock, ComparisonTableBlock
 
 
 def _social_profiles(request):
@@ -238,6 +238,7 @@ class ToolPage(Page):
         ('rich_text', blocks.RichTextBlock()),
         ('callout', CalloutBlock()),
         ('features', FeatureCardBlock()),
+        ('table', ComparisonTableBlock()),
     ], use_json_field=True, blank=True, null=True, help_text="Additional in-depth guides and content for SEO ranking")
 
     canonical_url = models.CharField(max_length=255, blank=True, help_text="Override canonical URL (optional)")

@@ -193,7 +193,7 @@ class BlogPage(Page):
                     "headline": self.title,
                     "description": self.search_description or self.excerpt,
                     "datePublished": self.published_date.isoformat() if self.published_date else self.first_published_at.isoformat(),
-                    "dateModified": self.latest_revision_created_at.isoformat() if self.latest_revision_created_at else timezone.now().isoformat(),
+                    "dateModified": (self.last_published_at or self.latest_revision_created_at or timezone.now()).isoformat(),
                     "author": self.get_author_schema(base_url),
                     "publisher": {"@id": f"{base_url}/#organization"},
                     "mainEntityOfPage": page_url,

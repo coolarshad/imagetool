@@ -24,7 +24,11 @@
 
   {# Meta Information #}
   <div class="flex flex-wrap items-center gap-4 text-emerald-600 font-bold tracking-wide uppercase text-xs mb-6">
-    <span>{{ page.published_date|date:"F j, Y" }}</span>
+    <span>Published <time datetime="{{ page.published_date|date:'Y-m-d' }}">{{ page.published_date|date:"F j, Y" }}</time></span>
+    {% if page.last_published_at and page.last_published_at.date > page.published_date %}
+      <span>•</span>
+      <span>Updated <time datetime="{{ page.last_published_at|date:'Y-m-d' }}">{{ page.last_published_at|date:"F j, Y" }}</time></span>
+    {% endif %}
     <span>•</span>
     <span>By {{ page.author }}</span>
     <span>•</span>

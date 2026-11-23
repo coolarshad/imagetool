@@ -1,0 +1,13 @@
+<figure class="comparison-table">
+  <table>
+    {% if value.caption %}<caption>{{ value.caption }}</caption>{% endif %}
+    <thead>
+      <tr>{% for h in value.headers %}<th scope="col">{{ h }}</th>{% endfor %}</tr>
+    </thead>
+    <tbody>
+      {% for row in value.rows %}
+        <tr>{% for cell in row %}{% if forloop.first %}<th scope="row">{{ cell }}</th>{% else %}<td>{{ cell }}</td>{% endif %}{% endfor %}</tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</figure>

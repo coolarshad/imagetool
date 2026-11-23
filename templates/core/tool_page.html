@@ -91,6 +91,8 @@
       {% for block in page.editorial_content %}
         {% if block.block_type == 'rich_text' %}
           {{ block.value|richtext }}
+        {% elif block.block_type == 'table' %}
+          {% include_block block %}
         {% elif block.block_type == 'callout' %}
           <div class="p-6 my-6 rounded-2xl border-l-4 {% if block.value.type == 'info' %}bg-sky-50 border-sky-500 text-sky-900{% elif block.value.type == 'warning' %}bg-amber-50 border-amber-500 text-amber-900{% else %}bg-emerald-50 border-emerald-500 text-emerald-900{% endif %}">
             {% if block.value.title %}<h4 class="font-bold text-lg mb-2">{{ block.value.title }}</h4>{% endif %}

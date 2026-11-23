@@ -30,6 +30,9 @@
   {% elif settings.core.SEOSettings.default_og_image %}
     {% image settings.core.SEOSettings.default_og_image fill-1200x630 as def_og_img %}
     {% with share_image=request.scheme|add:"://"|add:request.get_host|add:def_og_img.url %}{% include "includes/og_image_meta.html" with share_image=share_image width=1200 height=630 %}{% endwith %}
+  {% elif page.tool_type %}
+    {% with 'images/og/'|add:page.tool_type|add:'.png' as tool_og_path %}{% static tool_og_path as og_static %}
+    {% with share_image=request.scheme|add:"://"|add:request.get_host|add:og_static %}{% include "includes/og_image_meta.html" with share_image=share_image width=1200 height=630 alt_text=page.title %}{% endwith %}{% endwith %}
   {% else %}
     {% static 'images/og-default.png' as og_static %}
     {% with share_image=request.scheme|add:"://"|add:request.get_host|add:og_static %}{% include "includes/og_image_meta.html" with share_image=share_image width=1200 height=630 %}{% endwith %}
@@ -288,9 +291,16 @@
 
       <div class="mt-12 pt-8 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-400">
         <p>© {{ current_year|default:2026 }} ImageToolLab. All rights reserved.</p>
-        <p class="flex items-center gap-2">
-          Designed for maximum performance & privacy.
-        </p>
+        {% get_social_profiles as footer_profiles %}
+        {% if footer_profiles %}
+          <p class="flex flex-wrap items-center gap-x-4 gap-y-1">
+            {% for profile in footer_profiles %}<a href="{{ profile.url }}" target="_blank" rel="noopener me" class="hover:text-emerald-600 transition-colors">{{ profile.label }}</a>{% endfor %}
+          </p>
+        {% else %}
+          <p class="flex items-center gap-2">
+            Designed for maximum performance & privacy.
+          </p>
+        {% endif %}
       </div>
     </div>
   </footer>

@@ -62,3 +62,18 @@ class CalloutBlock(blocks.StructBlock):
     class Meta:
         icon = "info-circle"
         label = "Callout / Alert Box"
+
+
+class ComparisonTableBlock(blocks.StructBlock):
+    """Simple data table (first column is the row label). Good for featured snippets."""
+    caption = blocks.CharBlock(required=False, max_length=200, help_text="Shown above the table and used as its caption")
+    headers = blocks.ListBlock(blocks.CharBlock(max_length=80), help_text="Column headings")
+    rows = blocks.ListBlock(
+        blocks.ListBlock(blocks.CharBlock(max_length=200), label="Row cells"),
+        help_text="One entry per row; cells in the same order as the headings",
+    )
+
+    class Meta:
+        icon = "table"
+        label = "Comparison Table"
+        template = "core/blocks/comparison_table.html"

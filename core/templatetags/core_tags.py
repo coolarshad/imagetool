@@ -1,6 +1,8 @@
 from django import template
 from django.utils.html import mark_safe
-from core.models import ToolPage
+from urllib.parse import urlparse
+
+from core.models import ToolPage, _social_profiles
 
 register = template.Library()
 
@@ -17,6 +19,27 @@ def get_page_structured_data(context):
     if page and hasattr(page, 'get_structured_data') and request:
         return page.get_structured_data(request)
     return ""
+
+SOCIAL_LABELS = {
+    "twitter.com": "X (Twitter)", "x.com": "X (Twitter)", "github.com": "GitHub",
+    "linkedin.com": "LinkedIn", "producthunt.com": "Product Hunt", "facebook.com": "Facebook",
+    "instagram.com": "Instagram", "youtube.com": "YouTube", "reddit.com": "Reddit",
+    "alternativeto.net": "AlternativeTo", "mastodon.social": "Mastodon", "bsky.app": "Bluesky",
+}
+
+
+@register.simple_tag(takes_context=True)
+def get_social_profiles(context):
+    """Official profiles from SEO Settings, as [{'url', 'label'}]. Empty list hides the UI."""
+    request = context.get('request')
+    if request is None:
+        return []
+    profiles = []
+    for url in _social_profiles(request):
+        host = urlparse(url).netloc.lower().removeprefix("www.")
+        profiles.append({"url": url, "label": SOCIAL_LABELS.get(host, host)})
+    return profiles
+
 
 @register.filter
 def tool_icon(tool_type):

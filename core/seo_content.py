@@ -31,6 +31,49 @@ def tip(title, html):
     return ("callout", {"type": "tip", "title": title, "text": html})
 
 
+def table(caption, headers, rows):
+    return ("table", {"caption": caption, "headers": headers, "rows": rows})
+
+
+# Every URL below was checked to resolve (HTTP 200) on 2026-11-23.
+SOURCE_LINKS = {
+    "mdn_formats": ("MDN: Image file type and format guide", "https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types"),
+    "mdn_toblob": ("MDN: HTMLCanvasElement.toBlob()", "https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob"),
+    "mdn_smoothing": ("MDN: imageSmoothingQuality", "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingQuality"),
+    "mdn_rotate": ("MDN: CanvasRenderingContext2D.rotate()", "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/rotate"),
+    "mdn_scale": ("MDN: CanvasRenderingContext2D.scale()", "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/scale"),
+    "wiki_mirror": ("Wikipedia: Mirror image", "https://en.wikipedia.org/wiki/Mirror_image"),
+    "mdn_imagedata": ("MDN: getImageData()", "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/getImageData"),
+    "webdev_format": ("web.dev: Choose the right image format", "https://web.dev/articles/choose-the-right-image-format"),
+    "webdev_webp": ("web.dev: Use WebP images", "https://web.dev/articles/serve-images-webp"),
+    "webdev_compress": ("web.dev: Use Imagemin to compress images", "https://web.dev/articles/use-imagemin-to-compress-images"),
+    "webp": ("Google for Developers: WebP", "https://developers.google.com/speed/webp"),
+    "webp_study": ("Google: WebP compression study", "https://developers.google.com/speed/webp/docs/webp_study"),
+    "png_spec": ("W3C: PNG specification", "https://www.w3.org/TR/png-3/"),
+    "apple_heif": ("Apple Support: Using HEIF or HEVC media on Apple devices", "https://support.apple.com/en-us/116944"),
+    "youtube_thumb": ("YouTube Help: Add custom thumbnails", "https://support.google.com/youtube/answer/72431"),
+    "ogp": ("The Open Graph protocol", "https://ogp.me/"),
+    "wiki_exif": ("Wikipedia: Exif", "https://en.wikipedia.org/wiki/Exif"),
+    "wiki_scaling": ("Wikipedia: Image scaling", "https://en.wikipedia.org/wiki/Image_scaling"),
+    "wiki_crop": ("Wikipedia: Cropping (image)", "https://en.wikipedia.org/wiki/Cropping_(image)"),
+    "wiki_thirds": ("Wikipedia: Rule of thirds", "https://en.wikipedia.org/wiki/Rule_of_thirds"),
+    "wiki_compression": ("Wikipedia: Image compression", "https://en.wikipedia.org/wiki/Image_compression"),
+    "wiki_pixelization": ("Wikipedia: Pixelization", "https://en.wikipedia.org/wiki/Pixelization"),
+    "wiki_watermark": ("Wikipedia: Digital watermarking", "https://en.wikipedia.org/wiki/Digital_watermarking"),
+    "wiki_grayscale": ("Wikipedia: Grayscale", "https://en.wikipedia.org/wiki/Grayscale"),
+    "copyright_faq": ("U.S. Copyright Office: Copyright FAQ", "https://www.copyright.gov/help/faq/faq-general.html"),
+    "eff_ssd": ("EFF: Surveillance Self-Defense", "https://ssd.eff.org/"),
+}
+
+
+def sources(*keys):
+    items = "".join(
+        f'<li><a href="{SOURCE_LINKS[k][1]}" rel="noopener" target="_blank">{SOURCE_LINKS[k][0]}</a></li>'
+        for k in keys
+    )
+    return rich(f"<h2>Sources and further reading</h2><ul>{items}</ul>")
+
+
 TOOL_CONTENT = {
     # ------------------------------------------------------------------ resize
     "resize": {
@@ -69,16 +112,22 @@ TOOL_CONTENT = {
                 "straight off a phone camera to 1200 x 900 px for a website. Shrinking an image removes pixels and "
                 "makes the file lighter; enlarging it invents new pixels by interpolating between the existing ones.</p>"
                 "<h2>Which size should I use?</h2>"
-                "<p>Common target sizes for popular uses:</p>"
-                "<ul>"
-                "<li><b>Instagram portrait post:</b> 1080 x 1350 px (4:5)</li>"
-                "<li><b>Instagram square post:</b> 1080 x 1080 px (1:1)</li>"
-                "<li><b>Instagram / TikTok Story:</b> 1080 x 1920 px (9:16)</li>"
-                "<li><b>YouTube thumbnail:</b> 1280 x 720 px (16:9)</li>"
-                "<li><b>Open Graph / link preview image:</b> 1200 x 630 px</li>"
-                "<li><b>Full-width website hero image:</b> 1920 px wide</li>"
-                "<li><b>Email attachment or blog body image:</b> 800-1200 px wide</li>"
-                "</ul>"
+                "<p>Common target sizes for popular uses are in the table below.</p>"
+            ),
+            table(
+                "Recommended image sizes by use",
+                ["Use", "Size (px)", "Aspect ratio"],
+                [
+                    ["Instagram portrait post", "1080 x 1350", "4:5"],
+                    ["Instagram square post", "1080 x 1080", "1:1"],
+                    ["Instagram / TikTok Story or Reel", "1080 x 1920", "9:16"],
+                    ["YouTube thumbnail", "1280 x 720", "16:9"],
+                    ["Link preview (Open Graph)", "1200 x 630", "1.91:1"],
+                    ["Full-width website hero", "1920 wide", "varies"],
+                    ["Blog body image or email", "800-1200 wide", "varies"],
+                ],
+            ),
+            rich(
                 "<p>If the target has a different shape from your photo, <a href=\"/crop-image/\">crop it</a> to that "
                 "shape first and then resize, otherwise you'll get the right width but the wrong height.</p>"
                 "<h2>How does this resizer keep images sharp?</h2>"
@@ -87,6 +136,7 @@ TOOL_CONTENT = {
                 "edges and moire patterns you get from naive nearest-neighbour scaling.</p>"
             ),
             tip("Pro tip", "<p>Resize <b>before</b> you compress. Halving the dimensions usually saves more bytes than any quality setting, and the image stays sharper.</p>"),
+            sources("wiki_scaling", "mdn_smoothing", "youtube_thumb", "ogp"),
         ],
     },
 
@@ -134,7 +184,20 @@ TOOL_CONTENT = {
                 "rule of thirds). Leave a little space in the direction a person is looking or moving, and avoid "
                 "cutting through joints such as wrists, knees or ankles.</p>"
             ),
+            table(
+                "Common crop shapes and where they're used",
+                ["Aspect ratio", "Shape", "Typical use"],
+                [
+                    ["1:1", "Square", "Profile pictures, Instagram square posts, product thumbnails"],
+                    ["4:5", "Tall portrait", "Instagram and Facebook feed posts"],
+                    ["9:16", "Full-screen vertical", "Stories, Reels, TikTok, phone wallpapers"],
+                    ["16:9", "Widescreen", "YouTube thumbnails, presentations, desktop wallpapers"],
+                    ["3:2", "Classic photo", "Prints (6 x 4 in), most DSLR and mirrorless photos"],
+                    ["4:3", "Standard", "Many phone cameras, tablets, older displays"],
+                ],
+            ),
             tip("Pro tip", "<p>Crop first, then resize. If you resize first you throw away pixels you might want to keep after cropping.</p>"),
+            sources("wiki_crop", "wiki_thirds", "youtube_thumb"),
         ],
     },
 
@@ -187,11 +250,22 @@ TOOL_CONTENT = {
                 "cuts its size by half or more with no visible difference at normal viewing size. The editor shows the "
                 "exact output size after each compression, so you can experiment safely and undo.</p>"
                 "<h2>Which format compresses best?</h2>"
-                "<p>WebP generally produces smaller files than JPG at the same visual quality and also supports "
-                "transparency. JPG remains the most widely compatible choice for photos. Use the "
+                "<p>WebP generally produces smaller files than JPG at the same visual quality - Google's own "
+                "compression study reports noticeably smaller files - and also supports transparency. JPG remains "
+                "the most widely compatible choice for photos. Use the "
                 "<a href=\"/convert-image/\">Convert Image</a> tool if you need to switch formats.</p>"
             ),
+            table(
+                "What the quality slider does for each format",
+                ["Input format", "Compression", "Output from this tool", "Suggested quality"],
+                [
+                    ["JPG / JPEG", "Lossy", "JPG", "70-85% for photos"],
+                    ["WebP", "Lossy (or lossless)", "WebP", "70-85% for photos"],
+                    ["PNG", "Lossless - no quality setting", "WebP (so the slider can work)", "80-90% for graphics and screenshots"],
+                ],
+            ),
             tip("Pro tip", "<p>The biggest savings come from resizing. A photo resized from 4000 px to 1600 px wide has about one sixth of the pixels - compress it after that.</p>"),
+            sources("webdev_compress", "webp_study", "mdn_toblob", "wiki_compression"),
         ],
     },
 
@@ -230,11 +304,18 @@ TOOL_CONTENT = {
                 "<p>Converting re-encodes the same pixels in a different file format. The picture looks the same, but "
                 "the format decides how the data is compressed, whether transparency is kept, and which apps can open it.</p>"
                 "<h2>JPG vs PNG vs WebP at a glance</h2>"
-                "<ul>"
-                "<li><b>JPG / JPEG</b> - lossy, no transparency, smallest choice for photos among the classic formats, opens everywhere.</li>"
-                "<li><b>PNG</b> - lossless, supports transparency, ideal for logos, icons, UI screenshots and text; large for photos.</li>"
-                "<li><b>WebP</b> - lossy or lossless, supports transparency, typically smaller than JPG and PNG; supported by all current browsers.</li>"
-                "</ul>"
+            ),
+            table(
+                "JPG vs PNG vs WebP",
+                ["Format", "Compression", "Transparency", "Best for", "Compatibility"],
+                [
+                    ["JPG / JPEG", "Lossy", "No", "Photos", "Opens everywhere"],
+                    ["PNG", "Lossless", "Yes", "Logos, icons, screenshots, text", "Opens everywhere"],
+                    ["WebP", "Lossy or lossless", "Yes", "Websites - usually the smallest file", "All current browsers; some older apps and upload forms reject it"],
+                    ["HEIC / HEIF", "Lossy", "Yes", "iPhone camera photos", "Apple devices; limited elsewhere (can't be exported here)"],
+                ],
+            ),
+            rich(
                 "<h2>When should you convert?</h2>"
                 "<ul>"
                 "<li>A website or form only accepts JPG or PNG and your file is WebP.</li>"
@@ -244,6 +325,7 @@ TOOL_CONTENT = {
                 "</ul>"
             ),
             tip("Note", "<p>Converting a JPG to PNG won't restore detail that JPG compression already removed - it only makes the file bigger. Keep your originals.</p>"),
+            sources("webdev_format", "mdn_formats", "webp", "png_spec", "apple_heif"),
         ],
     },
 
@@ -292,6 +374,7 @@ TOOL_CONTENT = {
                 "<li>Crop afterwards to remove the angled corners.</li>"
                 "</ul>"
             ),
+            sources("mdn_rotate", "wiki_exif"),
         ],
     },
 
@@ -331,6 +414,7 @@ TOOL_CONTENT = {
                 "</ul>"
             ),
             tip("Watch out", "<p>Flipping a photo with visible text, number plates or brand logos will make them read backwards - check before you publish.</p>"),
+            sources("wiki_mirror", "mdn_scale"),
         ],
     },
 
@@ -379,6 +463,7 @@ TOOL_CONTENT = {
                 "<li>Strip private EXIF data with <a href=\"/metadata-image/\">Clean Metadata</a> before you post publicly.</li>"
                 "</ul>"
             ),
+            sources("wiki_watermark", "copyright_faq"),
         ],
     },
 
@@ -432,6 +517,7 @@ TOOL_CONTENT = {
                 "<p>Many online EXIF removers ask you to upload the very photo you're trying to protect. ImageToolLab "
                 "reads the file and redraws it locally, so the original - GPS tags included - never leaves your device.</p>"
             ),
+            sources("wiki_exif", "mdn_toblob", "eff_ssd"),
         ],
     },
 
@@ -482,6 +568,7 @@ TOOL_CONTENT = {
                 "and only the pixelated result is saved.</p>"
             ),
             tip("Safety tip", "<p>For passwords, card numbers or ID documents, cropping the information out completely is safer than any pixelation.</p>"),
+            sources("wiki_pixelization", "mdn_imagedata", "eff_ssd"),
         ],
     },
 
@@ -527,6 +614,7 @@ TOOL_CONTENT = {
                 "<p>Pick images with strong contrast between light and dark areas, interesting textures or dramatic "
                 "shadows. Flat, evenly lit scenes can look dull in grey - try binary mode for a bolder graphic effect.</p>"
             ),
+            sources("wiki_grayscale", "mdn_imagedata"),
         ],
     },
 }

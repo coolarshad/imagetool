@@ -19,3 +19,11 @@
   .prose { font-size: 1.0625rem; }
   .prose h2 { font-size: 1.9rem; }
 }
+
+/* Comparison tables inside tool guides */
+.prose .comparison-table { margin: 1.5em 0 2em; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.prose .comparison-table table { width: 100%; border-collapse: collapse; font-size: 0.92em; min-width: 520px; }
+.prose .comparison-table caption { caption-side: top; text-align: left; font-weight: 800; color: #0f172a; padding-bottom: 0.6em; }
+.prose .comparison-table th, .prose .comparison-table td { border-bottom: 1px solid #e2e8f0; padding: 0.65em 0.8em; text-align: left; vertical-align: top; }
+.prose .comparison-table thead th { background: #ecfdf5; color: #065f46; font-weight: 800; border-bottom: 2px solid #a7f3d0; }
+.prose .comparison-table tbody th { color: #0f172a; font-weight: 700; white-space: nowrap; }

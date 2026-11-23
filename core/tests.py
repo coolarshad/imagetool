@@ -122,3 +122,30 @@ class ImageToolLabV2Tests(TestCase):
         self.assertEqual(len(howto['step']), 4)
         page = ToolPage.objects.get(tool_type='compress')
         self.assertTrue(120 <= len(page.search_description) <= 165, len(page.search_description))
+
+    def test_robots_names_ai_crawlers(self):
+        content = self.client.get('/robots.txt').content.decode('utf-8')
+        for bot in ('GPTBot', 'ClaudeBot', 'PerplexityBot', 'OAI-SearchBot'):
+            self.assertIn(f'User-agent: {bot}\nAllow: /\nDisallow: /admin/', content)
+
+    def test_tool_page_tables_sources_and_og_image(self):
+        call_command('update_tool_content')
+        content = self.client.get('/convert-image/').content.decode('utf-8')
+        self.assertIn('<caption>JPG vs PNG vs WebP</caption>', content)
+        self.assertIn('Sources and further reading', content)
+        self.assertIn('/static/images/og/convert.png', content)
+
+    def test_contact_has_no_placeholder_social_links(self):
+        from core.models import SEOSettings
+        content = self.client.get('/contact/').content.decode('utf-8')
+        self.assertNotIn('href="https://twitter.com"', content)
+        self.assertNotIn('href="https://github.com"', content)
+
+        seo = SEOSettings.for_site(Site.objects.get(is_default_site=True))
+        seo.social_profiles = "https://x.com/ImageToolLab\nhttps://github.com/imagetoollab\nnot-a-url"
+        seo.save()
+        content = self.client.get('/contact/').content.decode('utf-8')
+        self.assertIn('href="https://github.com/imagetoollab"', content)
+        self.assertIn('X (Twitter)', content)
+        org = next(n for n in self._jsonld('/')['@graph'] if n['@type'] == 'Organization')
+        self.assertEqual(org['sameAs'], ["https://x.com/ImageToolLab", "https://github.com/imagetoollab"])
